@@ -1,0 +1,29 @@
+import cv2
+import numpy as np
+
+
+def apply_filter(image, itypes):
+  """Apply a filter to the image based on the filter type."""
+  img = image.copy()
+
+  if itypes == "red_tint":
+    img[:, :, 0] = 0
+    img[:, :, 1] = 0
+  elif itypes == "green_tint":
+    img[:, :, 0] = 0
+    img[:, :, 2] = 0
+  elif itypes == "blue_tint":
+    img[:, :, 1] = 0
+    img[:, :, 2] = 0
+  elif itypes == "sobel":
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    sx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+    sy = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+    sob = cv2.bitwise_or(sx.astype("uint8"), sy.astype("uint8"))
+    img = cv2.cvtColor(sob, cv2.COLOR_GRAY2BGR)
+  elif itypes == "canny":
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    can = cv2.Canny(gray, 100, 200)
+    img = cv2.cvtColor(can, cv2.COLOR_GRAY2BGR)
+
+  return img
